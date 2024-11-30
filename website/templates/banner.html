@@ -1,0 +1,84 @@
+<!-- Image for the Magnific Popup -->
+<a href="static/img/mfp/MFP.jpg" id="popup-link">
+            
+</a>
+
+
+<script>
+$(document).ready(function() {
+    // Open the Magnific Popup for the specific image automatically
+    $('#popup-link').magnificPopup({
+        type: 'image'
+    }).magnificPopup('open'); // Automatically opens the popup when the page loads
+});
+</script>
+
+<a href="static/img/mfp/MFP.jpg" id="popup-link">
+            
+</a>
+
+
+<script>
+$(document).ready(function() {
+    // Open the Magnific Popup for the specific image automatically
+    $('#popup-link').magnificPopup({
+        type: 'image'
+    }).magnificPopup('open'); // Automatically opens the popup when the page loads
+});
+</script>
+
+
+<div class="relative h-screen bg-cover bg-center" style="background-image: url('{{ url_for('static', filename='img/banner/' + random_image) }}');">
+<div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center p-8">
+<h1 class="text-5xl font-bold text-white mb-4">Welcome to PetZilla</h1>
+<p class="text-xl text-gray-200 mb-8">Your one-stop shop for all things pet-related!</p>
+<a href="#shop" class="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600">Shop Now</a>
+</div>
+</div>
+<!-- Floating Cart Element -->
+<div class="fixed bottom-4 right-4 bg-blue-400 text-white p-3 rounded-full shadow-lg flex items-center space-x-2 hover:bg-green-500">
+<a href="viewCart.php" class="flex items-center space-x-2">
+<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.5 6h13M7 13h10M10 21a1 1 0 100 2 1 1 0 000-2zm6 0a1 1 0 100 2 1 1 0 000-2z" />
+</svg>
+<span>Cart  python code</span>
+</a>
+</div>
+
+<section id="shop" class="p-8 max-w-4xl mx-auto text-center">
+<h2 class="text-3xl font-semibold text-gray-800 mb-4">Explore Our Categories</h2>
+<p class="text-gray-600">Find food, toys, medicine, and more for your pets.</p>
+</section>
+
+
+
+<section class="product-container  ">
+<div class="container mx-auto px-4 py-8">
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+<div class="bg-white border rounded-lg shadow-md overflow-hidden"> 
+  <img src="https://i.ibb.co.com/yqDdP2d/product4.webp" alt="Product Image" class="w-full h-40 object-cover"> 
+    <div class="p-4">
+       <h3 class="text-sm font-semibold text-gray-800">
+            Drools Kitten Food – Ocean Fish (400g)
+     </h3>
+       <div class="flex items-center justify-between mt-2"> 
+            <span class="text-green-600 text-sm font-medium">In stock</span> 
+           <span class="text-red-500 font-bold">BDT 250</span> 
+        </div> 
+     <button class="mt-3 bg-blue-500 text-white w-full py-2 rounded hover:bg-pink-600">
+            Add to Cart
+        </button>
+    </div>
+</div>
+
+
+
+
+</div>
+
+
+
+</div>
+</section>
