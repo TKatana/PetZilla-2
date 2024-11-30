@@ -55,3 +55,7 @@ def cart():
 @views.route('/appiontment')
 def appointment():
     return render_template('vetAppintment.html')
+
+@views.route('/blog')
+def blog():
+    return render_template('pet_blog.html')

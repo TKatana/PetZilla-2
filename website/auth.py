@@ -130,4 +130,6 @@ def sign_up():
     # Render the sign-up form if the request method is GET
     return render_template('sign_up.html')
 
-
+@auth.route('/adminlogin', methods=['GET', 'POST'])
+def adminlogin():
+    return render_template("adlogin.html")

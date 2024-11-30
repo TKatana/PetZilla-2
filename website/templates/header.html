@@ -9,7 +9,7 @@
             
             <ul>
                 
-                <li><a href="#regular_products">Products</a></li>
+                <li><a href="{{ url_for('views.home') }}">Products</a></li>
                 <li>
                 <a href="{{ url_for('views.appointment') }}" >Vet Appoinment</a>
                 </li>
@@ -22,6 +22,7 @@
                 <li><a id="signup" href="/sign-up">Sign Up</a> </li>
                 {% else %}
                 <li><a  href="{{ url_for('auth.logout') }}">Logout</a></li>
+                <li><a  href="{{ url_for('views.blog') }}">Blog</a></li>
                 {% endif %}
             </ul>
         </nav>
