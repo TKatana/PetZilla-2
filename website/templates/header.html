@@ -11,12 +11,18 @@
                 
                 <li><a href="#regular_products">Products</a></li>
                 <li>
-               <a href="vetAppintment.php" >Vet Appoinment</a>
+                <a href="{{ url_for('views.appointment') }}" >Vet Appoinment</a>
                 </li>
                 
-                <li><a id="signup" href="/sign-up">Sign Up</a> </li>
-                <li><a href="#contact">Contact Us</a></li>
+                
+                <li><a href="mailto:talk.to.petzilla@petzila.org?subject=i%20need%20this&body=dear%2C%0A%20%20%20%20Hi%20how%20are%20you">Contact Us</a></li>
+
+                {% if 'user_id' not in session %}                
                 <li><a id="login" href="/login">Login in</a></li>
+                <li><a id="signup" href="/sign-up">Sign Up</a> </li>
+                {% else %}
+                <li><a  href="{{ url_for('auth.logout') }}">Logout</a></li>
+                {% endif %}
             </ul>
         </nav>
     </div>

@@ -44,3 +44,14 @@ def userinfo():
 
     # Optionally, render a template if you still want to render a webpage
     # return render_template('userinfo.html', data=rows)
+
+
+
+
+@views.route('/cart')
+def cart():
+    return render_template('cart.html')
+
+@views.route('/appiontment')
+def appointment():
+    return render_template('vetAppintment.html')

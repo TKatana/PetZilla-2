@@ -3,6 +3,7 @@ import mysql.connector
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import get_db_connection
+from flask_login import login_user,login_required,logout_user,current_user
 # def get_db_connection():
 #     # Connect to the database
 #     connection = mysql.connector.connect(
@@ -37,8 +38,12 @@ def login():
                     print('Login successful')  # Print to the terminal (can be removed later)
                     # You can set up the session here for the logged-in user
                     session['user_id'] = user['user_id']  # Store user_id in session (you can store other data as needed)
+                                
                     session['username'] = user['username']  # Store the username in session
                     session['email'] = user['email']  # Store the email in session
+
+                    # login_user(logdedinuser, remember=True) #from the tutorial-2
+
                     return redirect(url_for('views.home'))  # Redirect to the home page
                 else:
                     flash('Incorrect password. Please try again.', category='error')
@@ -56,6 +61,7 @@ def login():
     return render_template("login.html")
 
 @auth.route('/logout')
+# @login_required #from the tutorial-2
 def logout():
     session.clear()  # Clears all session data
     flash('You have been logged out.', category='success')
@@ -85,6 +91,16 @@ def sign_up():
             cursor = conn.cursor()
 
             try:
+
+                # Query to check if the email already exists
+                cursor.execute('SELECT * FROM user WHERE email = %s', (email,))
+                existing_user = cursor.fetchone()  # Fetch a user with the given email
+
+                if existing_user:
+                    # If email already exists, flash the message and stop the sign-up process
+                    flash('This email already has an account. Please use a different one.', category='error')
+                    return render_template('sign_up.html')  # Return to the sign-up form
+
                 # Create SQL query with placeholders
                 query = '''
                     INSERT INTO user (username, email, password, phone, address, created_at)
