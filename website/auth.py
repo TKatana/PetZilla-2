@@ -2,18 +2,9 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 import mysql.connector
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import get_db_connection
+from .models import get_db_connection, get, save
 from flask_login import login_user,login_required,logout_user,current_user
-# def get_db_connection():
-#     # Connect to the database
-#     connection = mysql.connector.connect(
-#         host="localhost",        # MySQL server (XAMPP is on localhost)
-#         user="root",             # MySQL username (default root)
-#         password="",             # MySQL password (default empty in XAMPP)
-#         database="pet_zilla"    # The database you created in phpMyAdmin
-#     )
-   
-#     return connection
+
 
 auth = Blueprint('auth', __name__)
 
@@ -69,6 +60,8 @@ def logout():
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
+    if request.method == "GET":
+        return render_template("/sign_up.html")
     if request.method == 'POST':
         username = request.form.get('username')
         email = request.form.get('email')
@@ -132,4 +125,54 @@ def sign_up():
 
 @auth.route('/adminlogin', methods=['GET', 'POST'])
 def adminlogin():
+    session.clear()  # Clear session at the start (optional, might not be necessary)
+
+    if request.method == "GET":
+        return render_template("adlogin.html")
+
+    if request.method == "POST":
+        phone_no = request.form.get('phone')
+        password = request.form.get('password')
+        unique_key = request.form.get('unique_key')
+
+        # Check if the fields are not empty
+        if not phone_no or not password or not unique_key:
+            flash("All fields are required!", category='error')
+            return redirect(url_for('auth.adminlogin'))
+
+        # Establish a connection to the database
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)  # Use dictionary cursor for easier handling
+
+        try:
+            # Query to fetch the admin user by phone number and unique_key
+            cursor.execute("SELECT * FROM admin WHERE phone_no = %s AND unique_key = %s", (phone_no, unique_key,))
+            admin = cursor.fetchone()  # Fetch the first matching record
+
+            if admin:
+                # Verify if the password matches (no hashing in this case)
+                if admin['password'] == password:
+                    print('Admin login successful')  # Print to the terminal (can be removed later)
+                    # Set up the session here for the logged-in admin
+                    
+                    session['phone_no'] = admin['phone_no']  # Store admin's phone in session
+                    print('successfully logged in to admin')
+                    # Redirect to the admin dashboard
+                    return redirect(url_for('views.adminDashboard'))  # Render the admin dashboard page
+                else:
+                    print('Incorrect password. Please try again.')
+                    flash('Incorrect password. Please try again.', category='error')
+                    print('Incorrect password entered')
+            else:
+                print('Admin not found. Please check your credentials.')
+                flash('Admin not found. Please check your credentials.', category='error')
+
+        except mysql.connector.Error as err:
+            print('Database error')
+            flash(f"Database error: {err}", category='error')
+
+        finally:
+            cursor.close()
+            conn.close()
+
     return render_template("adlogin.html")

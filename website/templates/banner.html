@@ -39,15 +39,21 @@ $(document).ready(function() {
 <p class="text-xl text-gray-200 mb-8">Please log in to access more features.</p>
 {% endif %}
 <a href="#shop" class="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600 no-underline" >Shop Now</a>
+
 </div>
+
 </div>
+<form class="d-flex justify-content-center mt-4" method="post">
+    <input type="text" class="form-control w-50" placeholder="Search by product name">
+    <button class="btn btn-primary ms-2" type="submit">Search</button>
+</form>
 <!-- Floating Cart Element -->
 <div class="fixed bottom-4 right-4 bg-blue-400 text-white p-3 rounded-full shadow-lg flex items-center space-x-2 hover:bg-green-500">
 <a href="{{ url_for('views.cart') }}" class="flex items-center space-x-2, no-underline">
 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.5 6h13M7 13h10M10 21a1 1 0 100 2 1 1 0 000-2zm6 0a1 1 0 100 2 1 1 0 000-2z" />
 </svg>
-<span >Cart</span>
+<span class="text-black">Cart</span>
 </a>
 </div>
 
