@@ -37,11 +37,52 @@
 </head>
 <body>
     {% include "header.html" %}
-
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+<!-- 
+<main>
+    {% block content %}{% endblock %}
+</main> -->
 
     {% include 'footer.html' %}
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const cartCountElement = document.querySelector(".cart-count"); // Select the cart-count span
+  const addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
+
+  addToCartButtons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      const productId = button.dataset.id;
+      const productName = button.dataset.name;
+      const productPrice = button.dataset.price;
+      const productImage = button.dataset.image;
+
+      // Send data to the backend using fetch
+      const response = await fetch("/add-to-cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: productId,
+          name: productName,
+          price: parseFloat(productPrice),
+          image_url: productImage 
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        cartCountElement.textContent = data.cart_count; // Update cart count dynamically
+      } else {
+        alert("Failed to add to cart.");
+      }
+    });
+  });
+});
+
+</script>
+      
 </body>
 </html>

@@ -1,6 +1,6 @@
 import mysql.connector
 from flask import current_app, flash, jsonify
-
+import pymysql
 
 def get_db_connection():
     # Connect to the database
@@ -9,6 +9,8 @@ def get_db_connection():
         user="root",             # MySQL username (default root)
         password="",             # MySQL password (default empty in XAMPP)
         database="pet_zilla"    # The database you created in phpMyAdmin
+       
+        
     )
    
     return connection
@@ -38,11 +40,18 @@ def save(query, data):
     return True
 
 
-def get(query, data):
+def grab(query, data):
     # This function assumes get_db_connection is defined to return a connection object
-    connection = get_db_connection()
-    cur = connection.cursor()
-    cur.execute(query, data)
-    result = cur.fetchall()
-    connection.close()
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        if data:
+            cursor.execute(query,data)
+        else:
+            cursor.execute(query)
+        result = cursor.fetchall()
+    finally:
+        cursor.close()
+        conn.close()
+
     return result

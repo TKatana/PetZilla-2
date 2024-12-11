@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 import mysql.connector
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import get_db_connection, get, save
+from .models import get_db_connection, grab, save
 from flask_login import login_user,login_required,logout_user,current_user
 
 

@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, request, jsonify, redirect,url_for,flash
+from flask import Blueprint, render_template, request, jsonify, redirect,url_for,flash, session
 import os
 import random
-from .models import get_db_connection, save
+from .models import get_db_connection, save, grab
 from .helper import check_is_float_and_convert, upload_image_to_imgbb
 from base64 import b64encode
 
@@ -16,11 +16,62 @@ def home():
     images = [f for f in os.listdir(images_dir) if f.split('.')[-1].lower() in valid_extensions]
     random_image = random.choice(images)
 
+    query = "SELECT * FROM product"
+    products = grab(query, None)
 
 
 
 
-    return render_template("home.html",random_image=random_image)
+
+    return render_template("home.html",random_image=random_image, products=products, toys = products)
+
+
+#add to cart function
+
+@views.route("/add-to-cart", methods=["POST"])
+def add_to_cart():
+    if "user_id" not in session:
+        flash('User login required to add product', category='error')
+        return jsonify({"error": "Unauthorized"}), 401
+
+    # Retrieve product data from request
+    data = request.get_json()
+    product_id = data.get("id")
+    product_name = data.get("name")
+    product_price = data.get("price")
+    image_url = data.get("image_url")
+
+    # Initialize cart in session if it doesn't exist
+    if "cart" not in session:
+        session["cart"] = []
+
+    # Add product to cart
+    cart = session["cart"]
+    cart.append({"id": product_id, "name": product_name, "price": product_price, "product_img":image_url,"quantity": 1})
+    session["cart"] = cart  # Update session
+
+    return jsonify({"cart_count": len(cart)})
+
+
+
+
+
+@views.route('/get_cart_count', methods=['GET'])
+def get_cart_count():
+    """Fetch the current cart count for the logged-in user."""
+    user_id = session.get('user_id')
+
+    if not user_id:
+        # If user is not logged in, return error message with 401 status code
+        return jsonify({'error': 'User not logged in'}), 401
+
+    # Ensure 'cart' exists in session and user_id exists within the cart
+    if 'cart' in session and user_id in session['cart']:
+        return jsonify({'cart_count': len(session['cart'][user_id])})
+
+    # If no cart or items are found, return a count of 0
+    return jsonify({'cart_count': 0})
+
 
 
 @views.route('/userinfo')
@@ -61,8 +112,57 @@ category_list = [
 
 
 @views.route('/cart')
-def cart():
-    return render_template('cart.html')
+def view_cart():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    cart = session.get("cart", [])
+    total_price = sum(float(item["price"]) * item.get("quantity", 1) for item in cart)
+
+    return render_template("cart.html", cart=cart, total_price=total_price)
+
+
+##
+
+@views.route("/increment-cart", methods=["POST"])
+def increment_cart():
+    product_id = request.form.get("product_id")
+    cart = session.get("cart", [])
+    for item in cart:
+        if str(item["id"]) == str(product_id):  # Match types explicitly
+            item["quantity"] += 1
+            break  # Stop after finding the item
+    session["cart"] = cart
+    return redirect("/cart")
+
+
+@views.route("/decrement-cart", methods=["POST"])
+def decrement_cart():
+    product_id = request.form.get("product_id")
+    cart = session.get("cart", [])
+    for item in cart:
+        if str(item["id"]) == str(product_id):
+            if item["quantity"] > 1:
+                item["quantity"] -= 1
+            break  # Stop after finding the item
+    session["cart"] = cart
+    return redirect("/cart")
+
+
+
+@views.route("/remove-cart-item", methods=["POST"])
+def remove_cart_item():
+    product_id = request.form.get("product_id")
+    cart = session.get("cart", [])
+    cart = [item for item in cart if str(item["id"]) != str(product_id)]  # Remove matching item
+    session["cart"] = cart
+    return redirect("/cart")
+
+
+
+
+##
+
 
 @views.route('/appiontment')
 def appointment():

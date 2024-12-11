@@ -3,32 +3,59 @@
       <h1 class="text-2xl font-bold mb-4">Toys</h1>
        
         <!-- Product Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Product Card -->
-            <div class="bg-white border rounded-lg shadow-md overflow-hidden">
-                <img src="https://via.placeholder.com/150" alt="Product Image" class="w-full h-40 object-cover">
-                <div class="p-4">
-                    <h3 class="text-sm font-semibold text-gray-800">
-                        Drools Kitten Food – Ocean Fish (400g)
-                    </h3>
-                    <div class="flex items-center justify-between mt-2">
-                        <span class="text-green-600 text-sm font-medium">In stock</span>
-                        <span class="text-red-500 font-bold">BDT 250</span>
-                    </div>
-                    <button class="mt-3 bg-blue-500 text-white w-full py-2 rounded hover:bg-pink-600">
-                        Add to Cart
-                    </button>
-                </div>
+        <div class="relative">
+            <!-- Left Arrow -->
+            <button onclick="scrollMedicineCarouselLeft()" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-300 text-gray-600 hover:bg-gray-400 rounded-full p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+    
+            <!-- Product List -->
+            <div id="medicine-carousel" class="flex space-x-4 overflow-x-auto p-4 scrollbar-hide">
+                <!-- Products will be loaded here dynamically -->
+              <!--delete-->
+              {% for toy in toys %}
+              <div class="w-48 bg-white shadow-md rounded-lg p-4 flex-shrink-0">
+              <img src="{{ toy.product_img }}" alt="Product Image" class="w-full h-36 object-cover rounded-lg mb-2">
+              <h3 class="text-sm font-semibold">
+                  {{ toy.name }}
+              </h3> 
+              <p class="text-green-500 text-xs mb-2">{% if toy.stock != 0 %}
+                  {{ toy.stock }}
+                  In stock
+                  {% else %}
+                  Out of stock
+                  {% endif %}</p> 
+              <p class="text-lg font-bold text-gray-600">BDT {{ toy.price }}</p> 
+              <button class="mt-2 bg-blue-500 text-white rounded-full px-4 py-1 hover:bg-green-600 "> 
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"> 
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.5 6h13M7 13h10M10 21a1 1 0 100 2 1 1 0 000-2zm6 0a1 1 0 100 2 1 1 0 000-2z" />
+              </svg>
+              </button>
+              </div>
+    
+            
+              {% endfor %}
             </div>
-  
-            <!-- Repeat Product Card -->
-            
-  
-            <!-- Product Card -->
-            
-  
-            <!-- Add more product cards as needed -->
+    
+            <!-- Right Arrow -->
+            <button onclick="scrollMedicineCarouselRight()" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-300 text-gray-600 hover:bg-gray-400 rounded-full p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
         </div>
   
+  <script>
+      // Scroll the product carousel left and right
+    function scrollMedicineCarouselLeft() {
+      document.getElementById('medicine-carousel').scrollBy({ left: -500, behavior: 'smooth' });
+    }
   
-  </section>
+    function scrollMedicineCarouselRight() {
+      document.getElementById('medicine-carousel').scrollBy({ left: 500, behavior: 'smooth' });
+    }
+  </script>
+    </div>
+</section>
