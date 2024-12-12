@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, redirect,url_for,flash, session
+from flask import Blueprint, render_template, request, jsonify, redirect,url_for,flash, session, send_from_directory
 import os
 import random
 from .models import get_db_connection, save, grab
@@ -10,6 +10,11 @@ MAX_IAMGE_SIZE = 512 * 1024
 # Path to the images directory (this assumes you have a folder 'static/img/banner')
 images_dir = os.path.join(views.root_path, 'static', 'img', 'banner')
 mfp_img = os.path.join(views.root_path, 'static', 'img', 'mfp')
+
+
+
+
+
 @views.route('/')
 def home():
     valid_extensions = ['jpg', 'jpeg', 'png', 'gif']
@@ -18,12 +23,11 @@ def home():
 
     query = "SELECT * FROM product"
     products = grab(query, None)
-
-
-
-
-
-    return render_template("home.html",random_image=random_image, products=products, toys = products)
+    
+    medicine = grab("SELECT * FROM product WHERE category LIKE '%medicine%'",None)
+    toys = grab("SELECT * FROM product WHERE category LIKE '%toy%'",None)
+    foods = grab("SELECT * FROM product WHERE category like '%food%'", None)
+    return render_template("home.html",random_image=random_image, products=products, toys=toys, medicine=medicine, foods=foods)
 
 
 #add to cart function
@@ -140,10 +144,16 @@ def increment_cart():
 def decrement_cart():
     product_id = request.form.get("product_id")
     cart = session.get("cart", [])
+    # Iterate through the cart to find and update the item
+    cart = [
+        item for item in cart if not (
+            str(item["id"]) == str(product_id) and 
+            item["quantity"] == 1
+        )
+    ]
     for item in cart:
         if str(item["id"]) == str(product_id):
-            if item["quantity"] > 1:
-                item["quantity"] -= 1
+            item["quantity"] -= 1
             break  # Stop after finding the item
     session["cart"] = cart
     return redirect("/cart")
@@ -215,3 +225,32 @@ def adminDashboard():
     
 
     return render_template("adminDashboard.html")
+
+
+
+
+
+@views.route("/place-order", methods=["POST"])
+def place_order():
+    name = request.form.get("name")
+    address = request.form.get("address")
+    cart = session.get("cart", [])
+    total_price = sum(item["quantity"] * item["price"] for item in cart)
+    delivery_fee = 35
+    tax = round(total_price * 0.12, 2)
+    total = round(total_price + delivery_fee + tax, 2)
+
+    # Clear the cart after placing the order
+    session["cart"] = []
+
+    return render_template("order_confirmation.html", name=name, address=address, total=total)
+
+
+
+
+@views.route("/order-confirmation")
+def order_confirmation():
+    name = session.get("user_name", "Customer")
+    address = session.get("shipping_address", "No address provided")
+    total = session.get("total_price", 0)
+    return render_template("order_confirmation.html", name=name, address=address, total=total)

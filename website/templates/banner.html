@@ -64,31 +64,32 @@ $(document).ready(function() {
 <section >
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-screen-xl">
         <div class="grid grid-cols-5 gap-6 overflow-auto max-h-96 scrollbar-hide">
-            {% for product in products %}
+            {% for food in products %}
             <div class="bg-white border rounded-lg shadow-md overflow-hidden hover:scale-105 hover:shadow-xl transition-all duration-300 ease-in-out">
-                <img src="{{ product.product_img }}" alt="Product Image" class="w-full h-40 object-cover">
+                <img src="{{ food.product_img }}" alt="Product Image" class="w-full h-40 object-cover">
                 <div class="p-4">
                     <h3 class="text-sm font-semibold text-gray-800">
-                        {{ product.name }}
+                        {{ food.name }}
                     </h3>
                     <div class="flex items-center justify-between mt-2">
                         <span class="text-green-600 text-sm font-medium">
-                            {% if product.stock != 0 %}
-                            {{ product.stock }}
+                            {% if food.stock != 0 %}
+                            {{ food.stock }}
                             In stock
                             {% else %}
                             Out of stock
                             {% endif %}
                         </span>
-                        <span class="text-gray-600 font-bold">BDT {{ product.price }}</span>
+                        <span class="text-gray-600 font-bold">BDT {{ food.price }}</span>
                     </div>
-                    <button class="mt-3 bg-blue-500 text-white w-full py-2 rounded hover:bg-pink-600 add-to-cart-btn" 
-    data-id="{{ product.product_id }}" 
-    data-name="{{ product.name }}" 
-    data-price="{{ product.price }}"
-    data-image="{{product.product_img}}">
-    Add to Cart
-</button>
+                    <button class="mt-3 bg-blue-500 text-white w-full py-2
+                    rounded hover:bg-pink-600 add-to-cart-btn" 
+                    data-id="{{ food.product_id }}" 
+                    data-name="{{ food.name }}" 
+                    data-price="{{ food.price }}"
+                    data-image="{{food.product_img}}">
+                        Add to Cart
+                    </button>
                 </div>
             </div>
             {% endfor %}
@@ -122,7 +123,7 @@ $(document).ready(function() {
           <div id="product-carousel" class="flex space-x-4 overflow-x-auto p-4 scrollbar-hide">
               <!-- Products will be loaded here dynamically -->
             <!--delete-->
-            {% for toy in toys %}
+            {% for toy in foods %}
             <div class="w-48 bg-white shadow-md rounded-lg p-4 flex-shrink-0">
             <img src="{{ toy.product_img }}" alt="Product Image" class="w-full h-36 object-cover rounded-lg mb-2">
             <h3 class="text-sm font-semibold">
@@ -135,7 +136,13 @@ $(document).ready(function() {
                 Out of stock
                 {% endif %}</p> 
             <p class="text-lg font-bold text-gray-600">BDT {{ toy.price }}</p> 
-            <button class="mt-2 bg-blue-500 text-white rounded-full px-4 py-1 hover:bg-green-600"> 
+            <button class="mt-2 bg-blue-500 text-white rounded-full px-4 py-1 
+            hover:bg-green-600 add-to-cart-btn"
+            data-id="{{ toy.product_id }}" 
+            data-name="{{ toy.name }}" 
+            data-price="{{ toy.price }}"
+            data-image="{{toy.product_img}}"
+            > 
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"> 
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.5 6h13M7 13h10M10 21a1 1 0 100 2 1 1 0 000-2zm6 0a1 1 0 100 2 1 1 0 000-2z" />
             </svg>
@@ -207,7 +214,7 @@ $(document).ready(function() {
             <div id="medicine-carousel" class="flex space-x-4 overflow-x-auto p-4 scrollbar-hide">
                 <!-- Products will be loaded here dynamically -->
               <!--delete-->
-              {% for toy in toys %}
+              {% for toy in medicine %}
               <div class="w-48 bg-white shadow-md rounded-lg p-4 flex-shrink-0">
               <img src="{{ toy.product_img }}" alt="Product Image" class="w-full h-36 object-cover rounded-lg mb-2">
               <h3 class="text-sm font-semibold">
@@ -224,6 +231,7 @@ $(document).ready(function() {
                 data-id="{{ toy.id }}" 
                 data-name="{{ toy.name }}" 
                 data-price="{{ toy.price }}"
+                data-image="{{toy.product_img}}"
               > 
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"> 
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.5 6h13M7 13h10M10 21a1 1 0 100 2 1 1 0 000-2zm6 0a1 1 0 100 2 1 1 0 000-2z" />
