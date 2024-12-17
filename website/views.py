@@ -23,7 +23,7 @@ def home():
 
     query = "SELECT * FROM product"
     products = grab(query, None)
-    
+    products = products[::-1]
     medicine = grab("SELECT * FROM product WHERE category LIKE '%medicine%'",None)
     toys = grab("SELECT * FROM product WHERE category LIKE '%toy%'",None)
     foods = grab("SELECT * FROM product WHERE category like '%food%'", None)
@@ -234,16 +234,42 @@ def adminDashboard():
 def place_order():
     name = request.form.get("name")
     address = request.form.get("address")
+    payment_method = request.form.get('payment_method')
+    transaction_id = request.form.get('transaction_id', None)  # Optional field for Bkash
     cart = session.get("cart", [])
     total_price = sum(item["quantity"] * item["price"] for item in cart)
     delivery_fee = 35
-    tax = round(total_price * 0.12, 2)
+    tax = round(total_price * 0.04, 2)
     total = round(total_price + delivery_fee + tax, 2)
+
+    # Validate transaction_id if payment method is Bkash
+    if payment_method == "Bkash" and not transaction_id:
+        flash("Transaction ID is required for Bkash payments.", "error")
+        return redirect(url_for("views.cart"))  # Redirect back to cart page with an error message
+
+    # Process the order (example: save to a database or print to console)
+    order_details = {
+        "name": name,
+        "address": address,
+        "payment_method": payment_method,
+        "transaction_id": transaction_id,
+        "cart": cart,
+        "total": total
+    }
+    print("Order Details:", order_details)  # Replace with database saving logic
 
     # Clear the cart after placing the order
     session["cart"] = []
 
-    return render_template("order_confirmation.html", name=name, address=address, total=total)
+    # Render the order confirmation page
+    return render_template(
+        "order_confirmation.html",
+        name=name,
+        address=address,
+        total=total,
+        payment_method=payment_method,
+        transaction_id=transaction_id
+    )
 
 
 
