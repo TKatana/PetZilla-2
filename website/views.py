@@ -232,6 +232,11 @@ def adminDashboard():
 
 @views.route("/place-order", methods=["POST"])
 def place_order():
+    user_id = session.get("user_id")
+    if not user_id:
+        flash("You mast be loffed in to place an order.","error")
+        return redirect(url_for("views.login"))
+    
     name = request.form.get("name")
     address = request.form.get("address")
     payment_method = request.form.get('payment_method')
@@ -256,6 +261,27 @@ def place_order():
         "cart": cart,
         "total": total
     }
+    cursor = get_db_connection.cursor()
+    try:
+        # Insert into orders table
+        cursor.execute(
+            "INSERT INTO orders (user_id, user_name, address, payment_method, transaction_id, total_price) VALUES (%s, %s, %s, %s, %s, %s)",
+            (user_id, name, address, payment_method, transaction_id, total)
+        )
+        order_id = cursor.lastrowid
+
+        # Insert into order_items table
+        for item in cart:
+            cursor.execute(
+                "INSERT INTO order_items (order_id, product_name, product_price, quantity) VALUES (%s, %s, %s, %s)",
+                (order_id, item["name"], item["price"], item["quantity"])
+            )
+
+        db.commit()
+    except mysql.connector.Error as err:
+        db.rollback()
+        flash(f"Error placing order: {err}", "error")
+        return redirect(url_for("views.cart"))
     print("Order Details:", order_details)  # Replace with database saving logic
 
     # Clear the cart after placing the order
