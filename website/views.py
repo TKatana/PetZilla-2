@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, request, jsonify, redirect,url_for,flash, session, send_from_directory
 import os
 import random
-from .models import get_db_connection, save, grab
+from .models import db, save, grab
 from .helper import check_is_float_and_convert, upload_image_to_imgbb
 from base64 import b64encode
-
+import mysql.connector
+# from . import views
 views = Blueprint('views', __name__)
 MAX_IAMGE_SIZE = 512 * 1024
 # Path to the images directory (this assumes you have a folder 'static/img/banner')
@@ -81,7 +82,7 @@ def get_cart_count():
 @views.route('/userinfo')
 def userinfo():
     # Get a connection to the MySQL database
-    conn = get_db_connection()
+    conn = db()
     cursor = conn.cursor(dictionary=True)
 
     # Query to fetch data (replace 'user' with your actual table name)
@@ -185,8 +186,37 @@ def blog():
 
 @views.route('/adminDashboard', methods=['GET','POST'])
 def adminDashboard():
-    if request.method == 'GET':
-        return render_template("adminDashboard.html")
+    if 'unique_key' not in session:
+        flash('You must be logged in to view this page', category='error')
+        return redirect(url_for('auth.adminlogin'))
+    # if request.method == 'GET':
+    try:
+        conn = db()
+        cursor = conn.cursor(dictionary=True)
+        # Query to get sell/order information
+        query = """
+            SELECT o.order_id AS order_id, 
+                    u.username AS customer_name, 
+                    u.phone AS customer_phone, 
+                    u.email AS customer_email,
+                    o.payment_method,
+                    o.transaction_id
+            FROM orders o
+            INNER JOIN user u ON o.user_id = u.user_id
+            ORDER BY o.order_id ASC;
+        """
+        cursor.execute(query)
+        orders = cursor.fetchall()
+    except Exception as e:
+        print(f"Error fetching orders: {e}")
+        orders = []
+    finally:
+        cursor.close()
+        conn.close()
+
+        # return render_template("adminDashboard.html", orders=orders)
+        
+    
     if request.method == 'POST':
         name = request.form.get("productName", None)
         category = request.form.get('productCategory', None)
@@ -222,9 +252,7 @@ def adminDashboard():
             # return jsonify({"error": "All fields are required"}), 400
         print(image_url)
         save("INSERT INTO product (name, category, description, price, stock, product_img) VALUES (%s, %s, %s, %s, %s, %s)",(name, category, description, price, stock, image_url ))
-    
-
-    return render_template("adminDashboard.html")
+    return render_template("adminDashboard.html", orders=orders)
 
 
 
@@ -239,19 +267,55 @@ def place_order():
     
     name = request.form.get("name")
     address = request.form.get("address")
-    payment_method = request.form.get('payment_method')
+    payment_method = request.form.get('payment_method', 'COD')
     transaction_id = request.form.get('transaction_id', None)  # Optional field for Bkash
     cart = session.get("cart", [])
     total_price = sum(item["quantity"] * item["price"] for item in cart)
     delivery_fee = 35
     tax = round(total_price * 0.04, 2)
     total = round(total_price + delivery_fee + tax, 2)
-
+    print(f"Payment Method: {payment_method}, Transaction ID: {transaction_id}")
     # Validate transaction_id if payment method is Bkash
     if payment_method == "Bkash" and not transaction_id:
         flash("Transaction ID is required for Bkash payments.", "error")
-        return redirect(url_for("views.cart"))  # Redirect back to cart page with an error message
+        return redirect(url_for("views.view_cart"))  # Redirect back to cart page with an error message
+     # Insert order into the database
+    
+    try:
+        conn = db()  # Use your custom `db` function to get the connection
+        cursor = conn.cursor()
 
+        # Insert into the orders table
+        insert_order_query = """
+            INSERT INTO orders (user_id, name, address, payment_method, transaction_id, total_amount)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(insert_order_query, (user_id, name, address, payment_method, transaction_id if payment_method == "Bkash" else None, total))
+
+        order_id = cursor.lastrowid  # Get the inserted order's ID
+
+        # Insert each cart item into the order_items table
+        insert_item_query = """
+            INSERT INTO order_items (order_id, product_id, quantity, price)
+            VALUES (%s, %s, %s, %s)
+        """
+        for item in cart:
+            cursor.execute(insert_item_query, (order_id, item["id"], item["quantity"], item["price"]))
+
+        conn.commit()
+
+        # Clear the cart after placing the order
+        session["cart"] = []
+
+    except Exception as e:
+        conn.rollback()
+        print(f"Error: {e}")
+        return "An error occurred while processing your order.", 500
+
+    finally:
+        cursor.close()
+        conn.close()
+    
     # Process the order (example: save to a database or print to console)
     order_details = {
         "name": name,
@@ -261,27 +325,7 @@ def place_order():
         "cart": cart,
         "total": total
     }
-    cursor = get_db_connection.cursor()
-    try:
-        # Insert into orders table
-        cursor.execute(
-            "INSERT INTO orders (user_id, user_name, address, payment_method, transaction_id, total_price) VALUES (%s, %s, %s, %s, %s, %s)",
-            (user_id, name, address, payment_method, transaction_id, total)
-        )
-        order_id = cursor.lastrowid
-
-        # Insert into order_items table
-        for item in cart:
-            cursor.execute(
-                "INSERT INTO order_items (order_id, product_name, product_price, quantity) VALUES (%s, %s, %s, %s)",
-                (order_id, item["name"], item["price"], item["quantity"])
-            )
-
-        db.commit()
-    except mysql.connector.Error as err:
-        db.rollback()
-        flash(f"Error placing order: {err}", "error")
-        return redirect(url_for("views.cart"))
+    
     print("Order Details:", order_details)  # Replace with database saving logic
 
     # Clear the cart after placing the order

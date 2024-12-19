@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 import mysql.connector
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import get_db_connection, grab, save
+from .models import db, grab, save
 from flask_login import login_user,login_required,logout_user,current_user
 
 
@@ -15,7 +15,7 @@ def login():
         password = request.form.get('password')
 
         # Establish a connection to the database
-        conn = get_db_connection()
+        conn = db()
         cursor = conn.cursor(dictionary=True)  # Use dictionary cursor for easier handling
 
         try:
@@ -80,7 +80,7 @@ def sign_up():
             password_hash = generate_password_hash(password1, method='pbkdf2:sha256')
 
             # Get the database connection
-            conn = get_db_connection()
+            conn = db()
             cursor = conn.cursor()
 
             try:
@@ -141,7 +141,7 @@ def adminlogin():
             return redirect(url_for('auth.adminlogin'))
 
         # Establish a connection to the database
-        conn = get_db_connection()
+        conn = db()
         cursor = conn.cursor(dictionary=True)  # Use dictionary cursor for easier handling
 
         try:
@@ -156,6 +156,7 @@ def adminlogin():
                     # Set up the session here for the logged-in admin
                     
                     session['phone_no'] = admin['phone_no']  # Store admin's phone in session
+                    session['unique_key'] = admin['unique_key']
                     print('successfully logged in to admin')
                     # Redirect to the admin dashboard
                     return redirect(url_for('views.adminDashboard'))  # Render the admin dashboard page

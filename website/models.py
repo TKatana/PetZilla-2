@@ -2,7 +2,7 @@ import mysql.connector
 from flask import current_app, flash, jsonify
 import pymysql
 
-def get_db_connection():
+def db():
     # Connect to the database
     connection = mysql.connector.connect(
         host="localhost",        # MySQL server (XAMPP is on localhost)
@@ -18,7 +18,7 @@ def get_db_connection():
 
 def save(query, data):
     # Connect to MySQL and insert the product into the database
-    conn = get_db_connection()
+    conn = db()
     cursor = conn.cursor()
 
     try:
@@ -42,7 +42,7 @@ def save(query, data):
 
 def grab(query, data):
     # This function assumes get_db_connection is defined to return a connection object
-    conn = get_db_connection()
+    conn = db()
     cursor = conn.cursor(dictionary=True)
     try:
         if data:

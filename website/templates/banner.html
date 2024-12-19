@@ -60,6 +60,7 @@ $(document).ready(function() {
 
 <section >
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-screen-xl">
+        <h1 class="text-2xl font-bold mb-4">Regular Products</h1>
         <div class="grid grid-cols-5 gap-6 overflow-auto max-h-96 scrollbar-hide">
             {% for food in products %}
             <div class="bg-white border rounded-lg shadow-md overflow-hidden hover:scale-105 hover:shadow-xl transition-all duration-300 ease-in-out">
@@ -97,15 +98,15 @@ $(document).ready(function() {
 </section>
 <section id="regular_products">
     <div class="container mx-auto p-6">
-      <h1 class="text-2xl font-bold mb-4">Regular Products</h1>
+      
   
       <!-- Category Buttons -->
-      <div class="flex space-x-4 mb-4">
+      <!-- <div class="flex space-x-4 mb-4">
         <button onclick="loadProducts('all')" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">All</button>
         <button onclick="loadProducts('toys')" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Toys</button>
         <button onclick="loadProducts('medicine')" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Medicine</button>
         
-      </div>
+      </div> -->
   
       <!-- Product Carousel -->
       <div class="relative">
@@ -225,7 +226,7 @@ $(document).ready(function() {
                   {% endif %}</p> 
               <p class="text-lg font-bold text-gray-600">BDT {{ toy.price }}</p> 
               <button class="mt-2 bg-blue-500 text-white rounded-full px-4 py-1 hover:bg-green-600 add-to-cart-btn"
-                data-id="{{ toy.id }}" 
+                data-id="{{ toy.product_id }}" 
                 data-name="{{ toy.name }}" 
                 data-price="{{ toy.price }}"
                 data-image="{{toy.product_img}}"
