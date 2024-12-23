@@ -5,12 +5,11 @@ import pymysql
 def db():
     # Connect to the database
     connection = mysql.connector.connect(
-        host="localhost",        # MySQL server (XAMPP is on localhost)
-        user="root",             # MySQL username (default root)
-        password="",             # MySQL password (default empty in XAMPP)
-        database="pet_zilla"    # The database you created in phpMyAdmin
-       
-        
+        host="localhost",
+        user="root",
+        password="",
+        database="pet_zilla"
+           
     )
    
     return connection

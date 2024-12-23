@@ -64,12 +64,12 @@ Welcome to **Petzilla**! PetZilla is an online platform where users can purchase
 ```cmd
 > mysql -u root -p petzilla < schema/schema.sql
 ```
-- Update the database credentials in the `website/__init__.py` file:
+- Update the database credentials in the `website/models.py` file:
 ```python
-DB_HOST = 'localhost'
-DB_USER = 'root'
-DB_PASSWORD = 'yourpassword'
-DB_NAME = 'petzilla'
+host="localhost",
+user="root",
+password="your password",
+database="pet_zilla"
 ```
 
 #### 5. **Run the Application**
