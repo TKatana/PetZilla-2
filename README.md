@@ -99,7 +99,7 @@ petzilla-2/
 │   ├── views.py
 │   ├── __init__.py
 │   └── helper.py
-├── app.py
+├── main.py
 ├── schema/
 │   └── schema.sql
 ```
