@@ -74,9 +74,9 @@ database="pet_zilla"
 
 #### 5. **Run the Application**
 ```cmd
-> flask run
-or
 > python main.py
+or
+> flask run
 ```
 - Open your browser and go to: [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
