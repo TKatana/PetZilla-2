@@ -80,6 +80,33 @@ or
 ```
 - Open your browser and go to: [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
+---
+
+## Screenshots
+### Example UI Pages
+### Home Page
+![Home Page](https://i.ibb.co.com/JkY3fcD/Screenshot-2024-12-19-213217.png)
+
+### Add New Product Page
+![Add New Product Page](https://i.ibb.co.com/0hnbyB5/Screenshot-2024-12-19-213644-Copy.png)
+
+### Cart Page
+![Cart Page](https://i.ibb.co.com/RNBSXmt/image.png)
+
+### Payment Page
+![Payment Page](https://i.ibb.co.com/g4xGZjt/Screenshot-2024-12-21-014025.png)
+### Admin Dashboard
+![Admin Dashboard](https://i.ibb.co.com/XYJyj60/Screenshot-2024-12-19-213631.png)
+
+### New User Singup
+![New User Singup](https://i.ibb.co.com/092WZyt/Screenshot-2024-12-19-213530.png)
+
+### Login Page
+![Login Page](https://i.ibb.co.com/gyPHmyY/Screenshot-2024-12-19-213507.png)
+
+### Admin Login
+![Admin Login](https://i.ibb.co.com/mTJnKJj/Screenshot-2024-12-19-213544.png)
+
 
 
 ---
