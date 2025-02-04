@@ -96,10 +96,10 @@ or
 ### Payment Page
 ![Payment Page](https://i.ibb.co.com/g4xGZjt/Screenshot-2024-12-21-014025.png)
 ### Admin Dashboard
-![Admin Dashboard](https://i.ibb.co.com/XYJyj60/Screenshot-2024-12-19-213631.png)
+![Admin Dashboard](https://www.google.com)
 
 ### New User Singup
-![New User Singup](#######)
+![New User Singup](https://i.ibb.co.com/092WZyt/Screenshot-2024-12-19-213530.png)
 
 ### Login Page
 ![Login Page](https://i.ibb.co.com/gyPHmyY/Screenshot-2024-12-19-213507.png)
