@@ -21,7 +21,7 @@ def upload_image_to_imgbb(image_base64):
 
     IMG_BB_URL = "https://api.imgbb.com/1/upload"
     # EXPIRATION = "7872048" # 1 month = 2624016 secs, 1 day = 86400
-    api_key = 'e5c6d0e49b3f16b33a6cb2eb017bc11e'
+    api_key = '###@2'
         #Enter your ImageBB API Key Here^
     payload = {
         "key": api_key,
