@@ -99,7 +99,7 @@ or
 ![Admin Dashboard](https://i.ibb.co.com/XYJyj60/Screenshot-2024-12-19-213631.png)
 
 ### New User Singup
-![New User Singup](https://i.ibb.co.com/092WZyt/Screenshot-2024-12-19-213530.png)
+![New User Singup](#######)
 
 ### Login Page
 ![Login Page](https://i.ibb.co.com/gyPHmyY/Screenshot-2024-12-19-213507.png)
